@@ -13,10 +13,10 @@ import pe.seller.integration.domain.repository.IUrlConfigurationRepository;
 import pe.seller.integration.domain.service.IIntegrationService;
 import pe.seller.integration.domain.service.ISaveInfoService;
 import pe.seller.integration.domain.service.ISellerInfoService;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.stream.StreamSupport;
+
+import static java.util.Optional.ofNullable;
 
 @Log4j2
 @Service
@@ -59,40 +59,41 @@ public class IntegrationService implements IIntegrationService {
 
         if (json.get("clientProfileData") != null) {
             final var client = json.get("clientProfileData");
-            dto.setClientDocumentType(client.get("documentType").textValue());
-            dto.setClientDocument(client.get("document").textValue());
-            dto.setClientFirstName(client.get("firstName").textValue());
-            dto.setClientLastName(client.get("lastName").textValue());
-            dto.setClientPhone(client.get("phone").textValue());
-            dto.setClientEmail(client.get("email").textValue());
+            dto.setClientDocumentType(textValue(client, "documentType"));
+            dto.setClientDocument(textValue(client, "document"));
+            dto.setClientFirstName(textValue(client, "firstName"));
+            dto.setClientLastName(textValue(client, "lastName"));
+            dto.setClientPhone(textValue(client, "phone"));
+            dto.setClientEmail(textValue(client, "email"));
         }
         if (json.get("shippingData") != null) {
             final var shippingData = json.get("shippingData");
             if (shippingData.get("address") != null) {
                 final var address = shippingData.get("address");
 
-                dto.setClientAddressStreet(address.get("street").textValue());
-                dto.setClientAddressNumber(address.get("number").textValue());
-                dto.setClientAddressComplement(address.get("complement").textValue());
-                dto.setClientAddressReference(address.get("reference").textValue());
-                dto.setClientReceiverName(address.get("receiverName").textValue());
-                dto.setClientUbigeo(address.get("postalCode").textValue());
-                dto.setClientReceiverDocument(address.get("receiverDocument").textValue());
+                dto.setClientAddressStreet(textValue(address, "street"));
+                dto.setClientAddressNumber(textValue(address, "number"));
+                dto.setClientAddressComplement(textValue(address, "complement"));
+                dto.setClientAddressReference(textValue(address, "reference"));
+                dto.setClientReceiverName(textValue(address, "receiverName"));
+                dto.setClientUbigeo(textValue(address, "postalCode"));
+                dto.setClientReceiverDocument(textValue(address, "receiverDocument"));
             }
         }
         final var items = StreamSupport
                 .stream(json.get("items").spliterator(), false)
                 .toArray(JsonNode[]::new);
 
+        dto.setItems(new ArrayList<>());
         for(var item : items) {
             final var ref = new RequestItemDTO();
 
-            ref.setId(item.get("id").textValue());
-            ref.setDescription(item.get("name").textValue());
-            ref.setQuantity(String.valueOf(item.get("quantity").intValue()));
+            ref.setId(textValue(item,"id"));
+            ref.setDescription(textValue(item,"name"));
+            ref.setQuantity(String.valueOf(intValue(item, "quantity")));
             ref.setWeight("");
             ref.setVolWeight("");
-            ref.setPrice(String.valueOf(item.get("price").doubleValue()));
+            ref.setPrice(String.valueOf(doubleValue(item, "price")));
             ref.setWidth("");
             ref.setHeight("");
             ref.setLenght("");
@@ -105,8 +106,17 @@ public class IntegrationService implements IIntegrationService {
         dto.setOrderNumber("");
         dto.setCurrencyCode("");
         dto.setTotalValue(json.get("value").asDouble());
-        dto.setItems(new ArrayList<>());
 
         return dto;
+    }
+
+    static String textValue(JsonNode node, String field) {
+        return ofNullable(node.get(field)).map(JsonNode::textValue).orElse(null);
+    }
+    static Integer intValue(JsonNode node, String field) {
+        return ofNullable(node.get(field)).map(JsonNode::intValue).orElse(0);
+    }
+    static Double doubleValue(JsonNode node, String field) {
+        return ofNullable(node.get(field)).map(JsonNode::doubleValue).orElse(0.0);
     }
 }

@@ -11,6 +11,6 @@ import java.io.Serializable;
 public class LoginResponseDTO implements Serializable {
     @JsonProperty("access_token")
     private String accessToken;
-    @JsonProperty("tokenType")
+    @JsonProperty("token_type")
     private String tokenType;
 }
