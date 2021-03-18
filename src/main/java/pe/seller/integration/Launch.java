@@ -1,6 +1,7 @@
 package pe.seller.integration;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -8,10 +9,13 @@ import org.springframework.cloud.gcp.pubsub.support.BasicAcknowledgeablePubsubMe
 import org.springframework.cloud.gcp.pubsub.support.GcpPubSubHeaders;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.handler.annotation.Header;
+import pe.seller.integration.domain.service.IIntegrationService;
 
 @Log4j2
 @SpringBootApplication
 public class Launch implements CommandLineRunner {
+    @Autowired IIntegrationService service;
+
     public static void main(String[] args) {
         new SpringApplicationBuilder(Launch.class)
                 //.web(WebApplicationType.NONE)
@@ -32,7 +36,11 @@ public class Launch implements CommandLineRunner {
             String payload,
             @Header(GcpPubSubHeaders.ORIGINAL_MESSAGE) BasicAcknowledgeablePubsubMessage message
     ) {
-        log.info("Message arrived via an inbound channel adapter from sub-one! Payload: " + payload);
-        message.ack();
+        log.info("Message arrived!: " + message.getPubsubMessage().getMessageId());
+        if (service.process(payload))
+            message.ack();
+        else
+            message.nack();
+
     }
 }
