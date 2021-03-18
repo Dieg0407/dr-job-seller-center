@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SellerInfoDTO {
+    private String id;
     private String corporateDocument;
     private String corporateName;
     private String address;

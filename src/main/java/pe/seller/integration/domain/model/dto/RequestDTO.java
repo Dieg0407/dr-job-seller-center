@@ -31,7 +31,7 @@ public class RequestDTO {
     private String orderVolWeight;
     private String orderNumber;
     private String currencyCode;
-    private Integer totalValue;
+    private Double totalValue;
 
     private List<RequestItemDTO> items;
 }
