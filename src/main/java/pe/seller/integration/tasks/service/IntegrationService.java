@@ -32,11 +32,18 @@ public class IntegrationService implements IIntegrationService {
     public boolean process(String rawMessage) {
         try {
             final var json = mapper.readTree(rawMessage);
-            final var sellerInfo = sellerInfoService.findSellerData(json.get("accountName").textValue());
-            final var request = createRequest(json, sellerInfo);
-            final var configuration = repository.findById(1);
+            final var accountName = json.get("accountName").textValue();
 
-            saveInfoService.save(request, configuration.map(UrlConfiguration::getUrl).orElse("/url"));
+            final var configuration = repository.findBySellerName(accountName);
+            if (configuration.isEmpty()) {
+                log.info("No existe configuración de url para la cuenta {}", accountName);
+                return true;
+            }
+
+            final var sellerInfo = sellerInfoService.findSellerData(accountName);
+            final var request = createRequest(json, sellerInfo);
+
+            saveInfoService.save(request, configuration.get().url);
 
             return true;
         }

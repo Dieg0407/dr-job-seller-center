@@ -9,11 +9,18 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "url_configuration", schema = "private")
+@Table(name = "tb_seller_webhook", schema = "private")
 public class UrlConfiguration {
     @Id
+    @Column(name = "seller_hook_id")
     public int id;
 
     @Column
     public String url;
+
+    @Column(name = "Sellername")
+    public String sellerName;
+
+    @Column
+    public String status;
 }

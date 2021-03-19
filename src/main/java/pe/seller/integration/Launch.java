@@ -37,10 +37,14 @@ public class Launch implements CommandLineRunner {
             @Header(GcpPubSubHeaders.ORIGINAL_MESSAGE) BasicAcknowledgeablePubsubMessage message
     ) {
         log.info("Message arrived!: " + message.getPubsubMessage().getMessageId());
-        if (service.process(payload))
+        if (service.process(payload)){
+            log.info("Se guardó el mensaje: " + message.getPubsubMessage().getMessageId());
             message.ack();
-        else
+        }
+        else{
+            log.info("Fallo el guardado del mensaje: " + message.getPubsubMessage().getMessageId());
             message.nack();
+        }
 
     }
 }
