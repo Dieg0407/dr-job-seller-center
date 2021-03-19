@@ -56,13 +56,16 @@ public class IntegrationService implements IIntegrationService {
     private RequestDTO createRequest(JsonNode json, SellerInfoDTO sellerInfo) {
         final var dto = new RequestDTO();
 
-        dto.setMarketplaceId(json.get("id").textValue());
         dto.setSellerCorporateDocument(sellerInfo.getCorporateDocument());
         dto.setSellerCorporateName(sellerInfo.getCorporateName());
         dto.setSellerAddress(sellerInfo.getAddress());
         dto.setSellerPhone(sellerInfo.getPhone());
         dto.setSellerEmail(sellerInfo.getEmail());
         dto.setSellerUbigeo(sellerInfo.getUbigeo());
+
+        if (json.get("marketplace") != null) {
+            dto.setMarketplaceId(textValue(json.get("marketplace"), "id"));
+        }
 
         if (json.get("clientProfileData") != null) {
             final var client = json.get("clientProfileData");
@@ -98,12 +101,12 @@ public class IntegrationService implements IIntegrationService {
             ref.setId(textValue(item,"id"));
             ref.setDescription(textValue(item,"name"));
             ref.setQuantity(String.valueOf(intValue(item, "quantity")));
-            ref.setWeight("");
-            ref.setVolWeight("");
             ref.setPrice(String.valueOf(doubleValue(item, "price")));
             ref.setWidth("");
             ref.setHeight("");
             ref.setLenght("");
+            ref.setWeight("");
+            ref.setVolWeight("");
 
             dto.getItems().add(ref);
         }
