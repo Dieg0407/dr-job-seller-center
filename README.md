@@ -17,7 +17,7 @@ app.inretail.login.path=sellercenter/api/v1/oauth/token
 app.inretail.login.grant-type=password
 app.inretail.login.username=admin@intercorp.com
 app.inretail.login.password=<PATH>
-app.inretail.login.authorization=<AUTH>
+app.inretail.login.authorization=Basic\u0020<TOKEN>
 app.inretail.seller.path=sellercenter/api/v1/admin/sellers
 ```
 
@@ -37,7 +37,7 @@ app_inretail_login_path=sellercenter/api/v1/oauth/token
 app_inretail_login_grant-type=password
 app_inretail_login_username=admin@intercorp.com
 app_inretail_login_password=<PASS>
-app_inretail_login_authorization=<AUTH>
+app_inretail_login_authorization='Basic <TOKEN>'
 app_inretail_seller_path=sellercenter/api/v1/admin/sellers
 
 GOOGLE_APPLICATION_CREDENTIALS=/opt/configurations/credentials/sellercenter-dev.json
