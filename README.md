@@ -31,7 +31,7 @@ spring_jpa_database-platform=org.hibernate.dialect.PostgreSQLDialect
 spring_jpa_hibernate_ddl-auto=validate
 
 
-app_pubsub.subscription=projects/sellercenter-308001/subscriptions/test-topic-sub
+app_pubsub_subscription=projects/sellercenter-308001/subscriptions/test-topic-sub
 app_inretail_url=https://inretail.mysellercenter.com/
 app_inretail_login_path=sellercenter/api/v1/oauth/token
 app_inretail_login_grant-type=password
