@@ -12,4 +12,8 @@ WORKDIR /app
 
 COPY --from=build /binaries/target/*.jar app.jar
 
+COPY sellercenter-dev.json credentials.json
+
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/credentials.json
+
 ENTRYPOINT ["java", "-jar", "app.jar"]

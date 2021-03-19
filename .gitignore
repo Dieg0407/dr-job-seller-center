@@ -2,3 +2,5 @@
 target/
 *.iml
 **/application*.properties
+
+sellercenter-dev.json
