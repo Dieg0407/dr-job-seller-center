@@ -1,5 +1,6 @@
 package pe.seller.integration.tasks.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import pe.seller.integration.domain.model.dto.RequestDTO;
@@ -25,6 +26,7 @@ public class SaveInfoService implements ISaveInfoService {
     @Override
     public void save(RequestDTO info, String url) {
         try {
+            print(info);
             final var result = saveClient.listRepos(url, info).execute();
 
             if (result.isSuccessful()){
@@ -37,5 +39,13 @@ public class SaveInfoService implements ISaveInfoService {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void print(RequestDTO info) {
+        try {
+            final var str = new ObjectMapper().writeValueAsString(info);
+            log.info("Request enviado: {}", str);
+        }
+        catch (Exception e) {}
     }
 }
