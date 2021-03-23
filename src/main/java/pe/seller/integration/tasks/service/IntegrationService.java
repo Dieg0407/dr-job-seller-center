@@ -9,7 +9,9 @@ import pe.seller.integration.domain.model.dto.IntegrationRequestDTO;
 import pe.seller.integration.domain.model.dto.RequestDTO;
 import pe.seller.integration.domain.model.dto.RequestItemDTO;
 import pe.seller.integration.domain.model.dto.SellerInfoDTO;
+import pe.seller.integration.domain.model.entity.SellerLog;
 import pe.seller.integration.domain.model.entity.UrlConfiguration;
+import pe.seller.integration.domain.repository.ISellerLogRepository;
 import pe.seller.integration.domain.repository.IUrlConfigurationRepository;
 import pe.seller.integration.domain.service.IIntegrationService;
 import pe.seller.integration.domain.service.ISaveInfoService;
@@ -25,6 +27,7 @@ public class IntegrationService implements IIntegrationService {
     @Autowired ObjectMapper mapper;
 
     @Autowired IUrlConfigurationRepository repository;
+    @Autowired ISellerLogRepository sellerLogRepository;
 
     @Autowired ISellerInfoService sellerInfoService;
     @Autowired ISaveInfoService saveInfoService;
@@ -52,6 +55,12 @@ public class IntegrationService implements IIntegrationService {
         }
 
         final var sellerInfo = sellerInfoService.findSellerData(accountName);
+
+        final var sellerLog = new SellerLog();
+        sellerLog.setSellerName(accountName);
+        sellerLog.setJson(sellerInfo);
+        sellerLogRepository.save(sellerLog);
+
         final var request = createRequest(json, sellerInfo);
 
         saveInfoService.save(request, configuration.get().url);
