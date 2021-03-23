@@ -12,13 +12,13 @@ import pe.seller.integration.domain.model.dto.IntegrationRequestDTO;
 import pe.seller.integration.domain.service.IIntegrationService;
 
 @RestController
-@RequestMapping(path = "/integraion/v1")
+@RequestMapping(path = "/integration/v1")
 public class IntegrationController {
     @Autowired
     IIntegrationService service;
 
     @PostMapping(path = "")
-    public ResponseEntity<Void> create(@RequestBody IntegrationRequestDTO data) {
+    public ResponseEntity<Void> create(@RequestBody JsonNode data) {
         if (service.process(data)) {
             return ResponseEntity
                     .status(HttpStatus.NO_CONTENT)

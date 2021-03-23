@@ -33,10 +33,7 @@ public class IntegrationService implements IIntegrationService {
     public boolean process(String rawMessage) {
         try {
             final var json = mapper.readTree(rawMessage);
-            return process(new IntegrationRequestDTO(
-                    json.get("accountName").textValue(),
-                    json
-            ));
+            return process(json);
         }
         catch (Exception e) {
             log.error(e);
@@ -45,8 +42,7 @@ public class IntegrationService implements IIntegrationService {
     }
 
     @Override
-    public boolean process(IntegrationRequestDTO message) {
-        final var json = message.getJson();
+    public boolean process(JsonNode json) {
         final var accountName = json.get("accountName").textValue();
 
         final var configuration = repository.findBySellerName(accountName);

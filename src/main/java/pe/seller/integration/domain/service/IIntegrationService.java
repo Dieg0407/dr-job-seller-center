@@ -5,5 +5,5 @@ import pe.seller.integration.domain.model.dto.IntegrationRequestDTO;
 
 public interface IIntegrationService {
     boolean process(String rawMessage);
-    boolean process(IntegrationRequestDTO message);
+    boolean process(JsonNode message);
 }
