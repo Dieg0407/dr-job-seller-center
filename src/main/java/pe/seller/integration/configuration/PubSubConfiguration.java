@@ -1,5 +1,5 @@
 package pe.seller.integration.configuration;
-
+/*
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gcp.pubsub.core.PubSubTemplate;
@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.messaging.MessageChannel;
-
-@Configuration
+*/
+//@Configuration
 public class PubSubConfiguration {
-
+    /*
     @Value("${app.pubsub.subscription}")
     String subscriptionName;
 
@@ -33,5 +33,5 @@ public class PubSubConfiguration {
         adapter.setAckMode(AckMode.MANUAL);
         adapter.setPayloadType(String.class);
         return adapter;
-    }
+    } */
 }

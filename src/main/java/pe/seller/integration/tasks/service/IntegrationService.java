@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pe.seller.integration.domain.model.dto.IntegrationRequestDTO;
 import pe.seller.integration.domain.model.dto.RequestDTO;
 import pe.seller.integration.domain.model.dto.RequestItemDTO;
 import pe.seller.integration.domain.model.dto.SellerInfoDTO;
@@ -32,25 +33,34 @@ public class IntegrationService implements IIntegrationService {
     public boolean process(String rawMessage) {
         try {
             final var json = mapper.readTree(rawMessage);
-            final var accountName = json.get("accountName").textValue();
-
-            final var configuration = repository.findBySellerName(accountName);
-            if (configuration.isEmpty()) {
-                log.info("No existe configuración de url para la cuenta {}", accountName);
-                return true;
-            }
-
-            final var sellerInfo = sellerInfoService.findSellerData(accountName);
-            final var request = createRequest(json, sellerInfo);
-
-            saveInfoService.save(request, configuration.get().url);
-
-            return true;
+            return process(new IntegrationRequestDTO(
+                    json.get("accountName").textValue(),
+                    json
+            ));
         }
         catch (Exception e) {
             log.error(e);
         }
         return false;
+    }
+
+    @Override
+    public boolean process(IntegrationRequestDTO message) {
+        final var json = message.getJson();
+        final var accountName = json.get("accountName").textValue();
+
+        final var configuration = repository.findBySellerName(accountName);
+        if (configuration.isEmpty()) {
+            log.info("No existe configuración de url para la cuenta {}", accountName);
+            return true;
+        }
+
+        final var sellerInfo = sellerInfoService.findSellerData(accountName);
+        final var request = createRequest(json, sellerInfo);
+
+        saveInfoService.save(request, configuration.get().url);
+
+        return true;
     }
 
     private RequestDTO createRequest(JsonNode json, SellerInfoDTO sellerInfo) {
